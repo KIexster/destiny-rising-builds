@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emanare Planner · Destiny Rising</title>
+<meta name="description" content="Plan your Emanare board in Destiny Rising: unlock and level nodes, see attribute totals and the full material cost.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="mark" aria-hidden="true"></span>
+    <div>
+      <h1 data-t="pageTitle">Calculadora de Emanare</h1>
+      <p class="sub" data-t="pageSub">Planifica el tablero, mira los atributos y lo que cuesta.</p>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="seg" id="seasons" role="tablist" aria-label="Season"></div>
+    <div class="seg small" id="langs" role="tablist" aria-label="Language"></div>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="board-wrap" aria-label="Emanare board">
+    <svg id="board" viewBox="-500 -500 1000 1000" role="img"></svg>
+    <p class="hint" data-t="hint">Toca un nodo para verlo. Mayús + clic sube de nivel; clic derecho lo baja.</p>
+  </section>
+
+  <aside class="panel">
+    <section class="card core-card">
+      <h2 id="coreTitle"></h2>
+      <div class="stepper">
+        <button type="button" id="coreDown" aria-label="-">−</button>
+        <output id="coreLevel">1</output>
+        <button type="button" id="coreUp" aria-label="+">+</button>
+      </div>
+      <p class="note" id="corePhase"></p>
+    </section>
+
+    <section class="card" id="nodeCard" aria-live="polite"></section>
+
+    <section class="card">
+      <h2 id="attrsTitle"></h2>
+      <div class="stats">
+        <div><span class="k" data-t="activeNodes">Nodos activos</span><strong id="activeCount">0</strong></div>
+        <div><span class="k" data-t="maxNodes">Atributo al máximo</span><strong id="maxCount">0</strong></div>
+        <div><span class="k" id="powerLabel"></span><strong id="powerTotal">0</strong></div>
+      </div>
+      <ul class="list" id="attrList"></ul>
+      <p class="note" data-t="auraNote">Sin el aura de los nodos de personaje ni las gemas, que dependen de tu cuenta.</p>
+    </section>
+
+    <section class="card">
+      <h2 data-t="totalCost">Coste total</h2>
+      <ul class="list" id="costList"></ul>
+    </section>
+
+    <div class="actions">
+      <button type="button" id="fill" data-t="fill">Todo lo posible</button>
+      <button type="button" id="reset" data-t="reset">Reiniciar</button>
+      <button type="button" id="share" class="primary" data-t="share">Copiar enlace</button>
+    </div>
+  </aside>
+</main>
+
+<div class="tip" id="tip" role="tooltip" hidden></div>
+
+<footer class="foot">
+  <p data-t="footer">Proyecto de fans sin ánimo de lucro. No está afiliado a NetEase ni a Bungie.</p>
+  <p class="src" id="source"></p>
+</footer>
+
+<script src="emanare.js"></script>
+</body>
+</html>

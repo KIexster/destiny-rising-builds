@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Destiny Rising Builds</title>
+<meta name="description" content="Fan tools for Destiny Rising built from the game's own data.">
+<link rel="stylesheet" href="style.css">
+<style>
+  .home{max-width:880px;margin:0 auto;padding:12px 28px 40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+  .tool{display:block;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;
+    transition:border-color .2s,transform .2s}
+  a.tool:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .tool h2{margin:0 0 6px;font-size:18px}
+  .tool p{margin:0;color:var(--muted);font-size:14px}
+  .tool.soon{opacity:.55}
+  .tool .tag{display:inline-block;margin-bottom:10px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+  @media (max-width:560px){.home{padding:12px 16px 32px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="mark" aria-hidden="true"></span>
+    <div>
+      <h1>Destiny Rising Builds</h1>
+      <p class="sub">Herramientas de fans hechas con los datos del propio juego · Fan tools built from the game's own data</p>
+    </div>
+  </div>
+</header>
+<main class="home">
+  <a class="tool" href="emanare.html">
+    <span class="tag">Emanare</span>
+    <h2>Calculadora de Emanare · Emanare Planner</h2>
+    <p>Planifica el tablero, mira los atributos y el coste total. Plan the board, see the attributes and the total cost.</p>
+  </a>
+  <div class="tool soon">
+    <span class="tag">Próximamente · Coming soon</span>
+    <h2>Builds por personaje · Character builds</h2>
+    <p>Equipo recomendado por el juego para 16 personajes y builds de la comunidad.</p>
+  </div>
+</main>
+<footer class="foot"><p>Proyecto de fans sin ánimo de lucro. No está afiliado a NetEase ni a Bungie. · Non-profit fan project, not affiliated with NetEase or Bungie.</p></footer>
+</body>
+</html>
