@@ -15,7 +15,13 @@ const UI={
     remove:'Quitar',max:'Al máximo',pick:'Elige un nodo del tablero para ver qué da y cuánto cuesta.',now:'Ahora',next:'Siguiente nivel',
     nothing:'Nada todavía',copied:'Enlace copiado',gems:'Ranuras de gema enlazadas: {n}',gemOf:'Ranura de gema de: {s}',
     aura:'Su aura cubre hasta {n} nodos de atributo; pasa el ratón por encima para verlos.',costUnlock:'Coste de desbloqueo',costNext:'Coste del siguiente nivel',
-    maxed:'Nivel máximo',ring:'Anillo {n}',coreNext:'Coste del nivel {n}',source:'Datos del cliente del juego ({s}).',lvl:'Nv. {a}/{b}'},
+    maxed:'Nivel máximo',ring:'Anillo {n}',coreNext:'Coste del nivel {n}',source:'Datos del cliente del juego ({s}).',lvl:'Nv. {a}/{b}',
+    phaseTitle:'Objetivo por fase',phase:'Fase',fromBoard:'Desde tu tablero',fromPrev:'Desde la fase anterior',
+    phaseLeadBoard:'Lo que te falta para tener la fase {n} al máximo (núcleo {n} y todo lo que permite), partiendo de tu tablero.',
+    phaseLeadPrev:'Lo que cuesta la fase {n} si ya tienes la fase {p} al máximo.',phaseLeadFirst:'Lo que cuesta tener la fase 1 al máximo desde cero.',
+    phaseDone:'Tu tablero ya tiene la fase {n} al máximo.',phaseApply:'Ver la fase {n} al máximo en el tablero',
+    need:'Necesitas',have:'Tengo',short:'Faltan',haveNote:'Escribe cuánto tienes de cada material para ver lo que te falta. Se guarda solo en este navegador.',
+    allSet:'Tienes todo lo necesario para la fase {n}.',shortCount:'Te falta material en {a} de {b}.'},
   en:{pageTitle:'Emanare Planner',pageSub:'Plan the board, see the attributes it gives and what it costs.',
     hint:'Tap a node to inspect it. Shift + click levels it up; right-click levels it down.',activeNodes:'Active nodes',maxNodes:'Maxed attributes',
     auraNote:'Character Node auras and gems are not included: they depend on your account.',totalCost:'Total cost',fill:'Everything possible',
@@ -24,12 +30,18 @@ const UI={
     remove:'Remove',max:'Max',pick:'Pick a node on the board to see what it gives and what it costs.',now:'Now',next:'Next level',
     nothing:'Nothing yet',copied:'Link copied',gems:'Linked gem slots: {n}',gemOf:'Gem slot for: {s}',
     aura:'Its aura covers up to {n} Attribute Nodes; hover it to see them.',costUnlock:'Unlock cost',costNext:'Next level cost',
-    maxed:'Max level',ring:'Ring {n}',coreNext:'Level {n} cost',source:'Data from the game client ({s}).',lvl:'Lv. {a}/{b}'}
+    maxed:'Max level',ring:'Ring {n}',coreNext:'Level {n} cost',source:'Data from the game client ({s}).',lvl:'Lv. {a}/{b}',
+    phaseTitle:'Phase goal',phase:'Phase',fromBoard:'From your board',fromPrev:'From the previous phase',
+    phaseLeadBoard:'What you still need to max phase {n} (Core Node {n} and everything it allows), starting from your board.',
+    phaseLeadPrev:'What phase {n} costs when phase {p} is already maxed.',phaseLeadFirst:'What maxing phase 1 costs from scratch.',
+    phaseDone:'Your board already has phase {n} maxed.',phaseApply:'Show phase {n} maxed on the board',
+    need:'Need',have:'Have',short:'Short',haveNote:'Type how many of each material you have to see what you are short of. It is kept in this browser only.',
+    allSet:'You have everything phase {n} needs.',shortCount:'You are short of {a} of {b} materials.'}
 };
 // Ring spacing and orientation measured on the in-game board: a wide empty centre around the Core Node, and position 12
 // (the outer Character Node of slot 2) straight to the right.
 const GLIMMER=2000001,RING0=114,RING_STEP=45,SIZE={attr:12,gem:14,skill:18,role:17,assist:16};
-const S={data:null,lang:'es',season:null,core:1,levels:new Map(),sel:null};
+const S={data:null,lang:'es',season:null,core:1,levels:new Map(),sel:null,phase:null,from:'board',have:new Map()};
 let nodes=[],byId=new Map(),children=new Map(),order=[];
 const $=id=>document.getElementById(id);
 const SVG='http://www.w3.org/2000/svg';
@@ -127,6 +139,69 @@ function totals(){
   return {items,attrs,power,count,maxed};
 }
 
+// Phase goal: what maxing a season phase costs. Phase p allows Core Node level p, and with it every node and level
+// whose Core Node requirement is <= p. Players asked for "what I still need for next week's phase" rather than the
+// whole board, so the goal starts on the phase after the board's core.
+/** The board with phase p maxed: Core Node p, every node it allows unlocked, Attribute Nodes at the highest level it allows. */
+function phaseMax(p){
+  const st={core:p,levels:new Map()};
+  for(const n of order){
+    if(n.type==='core'||n.core>p)continue;
+    if(!n.prev.every(id=>{const q=byId.get(id);return !q||q.type==='core'||st.levels.get(id)>0}))continue;
+    let cap=1;
+    if(n.type==='attr')while(cap<n.levels.length&&n.levels[cap-1].next&&n.levels[cap-1].next.core<=p)cap++;
+    st.levels.set(n.id,cap);
+  }
+  return st;
+}
+/** Materials from board a to board b, counting only what b has above a. */
+function costBetween(a,b){
+  const items=new Map();
+  for(let l=a.core;l<b.core;l++)addCost(items,S.data.core[l-1].next?.cost);
+  for(const n of nodes){
+    if(n.type==='core')continue;
+    const from=a.levels.get(n.id)||0,to=b.levels.get(n.id)||0;
+    if(to<=from)continue;
+    if(!from)addCost(items,n.cost);
+    for(let l=Math.max(1,from);l<to;l++)addCost(items,n.levels[l-1].next?.cost);
+  }
+  return items;
+}
+function phaseNeed(){
+  const p=S.phase,target=phaseMax(p);
+  if(S.from==='prev')return costBetween(p>1?phaseMax(p-1):{core:1,levels:new Map()},target);
+  return costBetween({core:S.core,levels:S.levels},target);
+}
+const HAVE_KEY='emanare-have';
+function saveHave(){try{localStorage.setItem(HAVE_KEY,JSON.stringify([...S.have]))}catch{}}
+function loadHave(){try{S.have=new Map(JSON.parse(localStorage.getItem(HAVE_KEY)||'[]').filter(x=>Array.isArray(x)&&x.length===2).map(([i,n])=>[+i,Math.max(0,+n||0)]))}catch{S.have=new Map()}}
+function renderPhase(){
+  if(S.phase===null)S.phase=Math.min(10,S.core+1);
+  $('phases').innerHTML=`<span class="lbl">${t('phase')}</span>`+[...Array(10)].map((_,i)=>`<button type="button" role="tab" data-p="${i+1}" aria-selected="${i+1===S.phase}">${i+1}</button>`).join('');
+  $('phaseFrom').innerHTML=['board','prev'].map(f=>`<button type="button" role="tab" data-f="${f}" aria-selected="${f===S.from}">${t(f==='board'?'fromBoard':'fromPrev')}</button>`).join('');
+  const p=S.phase;
+  $('phaseLead').textContent=S.from==='board'?t('phaseLeadBoard',{n:p}):p>1?t('phaseLeadPrev',{n:p,p:p-1}):t('phaseLeadFirst');
+  $('phaseApply').textContent=t('phaseApply',{n:p});
+  const need=phaseNeed();
+  if(!need.size){$('phaseList').innerHTML='';$('phaseVerdict').textContent=t('phaseDone',{n:p});return}
+  const rows=[...need].sort((a,b)=>(a[0]===GLIMMER?-1:b[0]===GLIMMER?1:a[0]-b[0]));
+  $('phaseList').innerHTML=`<li class="head"><span></span><span>${t('need')}</span><span>${t('have')}</span><span>${t('short')}</span></li>`+
+    rows.map(([id,n])=>`<li data-i="${id}" data-n="${n}"><span>${esc(itemName(id))}</span><strong>${num(n)}</strong>`+
+      `<input type="number" min="0" step="1" inputmode="numeric" value="${S.have.has(id)?S.have.get(id):''}" aria-label="${esc(t('have')+': '+itemName(id))}"><b class="miss"></b></li>`).join('');
+  phaseShort();
+}
+/** Refreshes the Short column and the verdict without rebuilding the inputs (so typing keeps focus). */
+function phaseShort(){
+  const rows=[...$('phaseList').querySelectorAll('li[data-i]')];let short=0,typed=0;
+  for(const li of rows){
+    const id=+li.dataset.i,n=+li.dataset.n,cell=li.querySelector('.miss');
+    if(!S.have.has(id)){cell.textContent='';cell.className='miss';continue}
+    typed++;const miss=n-S.have.get(id);
+    cell.textContent=miss>0?num(miss):'✓';cell.className='miss '+(miss>0?'bad':'ok');if(miss>0)short++;
+  }
+  $('phaseVerdict').textContent=!typed?'':short?t('shortCount',{a:short,b:rows.length}):typed===rows.length?t('allSet',{n:S.phase}):'';
+}
+
 // Drawing
 const angle=pos=>(pos/24)*Math.PI*2-Math.PI;
 const radius=ring=>RING0+ring*RING_STEP;
@@ -192,7 +267,7 @@ function render(){
   const attrs=[...tot.attrs].sort((a,b)=>a[0]-b[0]);
   $('attrList').innerHTML=attrs.length?attrs.map(([a,v])=>`<li><span>${esc(attrName(a))}</span><strong>${attrValue(a,v)}</strong></li>`).join(''):`<li class="empty">${t('nothing')}</li>`;
   $('costList').innerHTML=costRows(tot.items)||`<li class="empty">${t('nothing')}</li>`;
-  renderCard();writeHash();
+  renderCard();renderPhase();writeHash();
 }
 function costRows(map){
   return [...map].sort((a,b)=>(a[0]===GLIMMER?-1:b[0]===GLIMMER?1:a[0]-b[0])).map(([id,n])=>`<li><span>${esc(itemName(id))}</span><strong>${num(n)}</strong></li>`).join('');
@@ -244,6 +319,9 @@ function writeHash(){
 function readHash(){
   const p=new URLSearchParams(location.hash.slice(1));
   const season=p.get('s');if(season&&S.data.seasons[season])S.season=season;
+  // h=item.count-…: materials sent by Apollo Companion. Kept in this browser, never written back into the link.
+  const have=(p.get('h')||'').split('-').map(x=>x.split('.').map(Number)).filter(([i,n])=>Number.isInteger(i)&&Number.isFinite(n)&&n>=0);
+  if(have.length){S.have=new Map(have);saveHave()}
   return {core:+p.get('c')||1,levels:(p.get('n')||'').split('-').filter(Boolean).map(x=>x.split('.').map(Number))};
 }
 
@@ -315,6 +393,18 @@ function wire(){
   $('share').addEventListener('click',async()=>{
     try{await navigator.clipboard.writeText(location.href);toast(t('copied'))}catch{prompt(t('share'),location.href)}
   });
+  $('phases').addEventListener('click',ev=>{const b=ev.target.closest('button[data-p]');if(b){S.phase=+b.dataset.p;renderPhase()}});
+  $('phaseFrom').addEventListener('click',ev=>{const b=ev.target.closest('button[data-f]');if(b){S.from=b.dataset.f;renderPhase()}});
+  $('phaseList').addEventListener('input',ev=>{
+    const li=ev.target.closest('li[data-i]');if(!li)return;const id=+li.dataset.i,v=ev.target.value.trim();
+    if(v===''||!(+v>=0))S.have.delete(id);else S.have.set(id,Math.floor(+v));
+    saveHave();phaseShort();
+  });
+  $('phaseApply').addEventListener('click',()=>{
+    const target=phaseMax(S.phase);S.core=S.phase;normalize();
+    for(const [id,lv] of target.levels)S.levels.set(id,Math.max(S.levels.get(id)||0,lv));
+    render();
+  });
   $('seasons').addEventListener('click',ev=>{const b=ev.target.closest('button[data-s]');if(b&&b.dataset.s!==S.season)loadSeason(b.dataset.s)});
   $('langs').addEventListener('click',ev=>{const b=ev.target.closest('button[data-l]');if(!b)return;S.lang=b.dataset.l;try{localStorage.setItem('lang',S.lang)}catch{}translate()});
 }
@@ -323,7 +413,7 @@ async function main(){
   let lang=null;try{lang=localStorage.getItem('lang')}catch{}
   S.lang=S.data.langs.includes(lang)?lang:(navigator.language||'').toLowerCase().startsWith('es')?'es':'en';
   const latest=Object.keys(S.data.seasons).sort((a,b)=>b-a)[0];S.season=latest;
-  const saved=location.hash?readHash():null;
+  loadHave();const saved=location.hash?readHash():null;
   wire();loadSeason(S.season,saved);translate();
 }
 main();

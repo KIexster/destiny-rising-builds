@@ -6,6 +6,7 @@ Fan tools for **Destiny Rising**, built from the game's own data. Live site: htt
 
 - Plan the Emanare board of seasons 4, 5 and 6.
 - See the attributes and Character Power it gives, and the total Glimmer and material cost.
+- **Phase goal:** what you still need to max a season phase (the next one by default), from your board or from the previous phase maxed. Type what you have and it shows what you are short of; the numbers stay in your browser.
 - Share a build as a link.
 - English and Spanish, using the game's official names.
 

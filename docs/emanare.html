@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Emanare Planner · Destiny Rising</title>
 <meta name="description" content="Plan your Emanare board in Destiny Rising: unlock and level nodes, see attribute totals and the full material cost.">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 <header class="top">
@@ -38,6 +38,16 @@
         <button type="button" id="coreUp" aria-label="+">+</button>
       </div>
       <p class="note" id="corePhase"></p>
+    </section>
+
+    <section class="card phase-card" id="phaseCard">
+      <div class="card-head"><h2 data-t="phaseTitle">Objetivo por fase</h2><div class="seg small" id="phaseFrom" role="tablist"></div></div>
+      <div class="phases" id="phases" role="tablist"></div>
+      <p class="note" id="phaseLead"></p>
+      <ul class="need" id="phaseList"></ul>
+      <p class="verdict" id="phaseVerdict" aria-live="polite"></p>
+      <div class="actions"><button type="button" id="phaseApply"></button></div>
+      <p class="note" data-t="haveNote"></p>
     </section>
 
     <section class="card" id="nodeCard" aria-live="polite"></section>
@@ -73,6 +83,6 @@
   <p class="src" id="source"></p>
 </footer>
 
-<script src="emanare.js"></script>
+<script src="emanare.js?v=2"></script>
 </body>
 </html>

@@ -27,7 +27,7 @@ h1{margin:0;font-size:24px;letter-spacing:.04em;text-transform:uppercase}
 .seg button[aria-selected="true"]{background:var(--accent);color:var(--ink)}
 .seg button:hover:not([aria-selected="true"]){color:var(--fg)}
 
-.layout{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:20px;padding:8px 28px 20px;align-items:start}
+.layout{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:20px;padding:8px 28px 20px;align-items:start}
 .board-wrap{position:sticky;top:12px}
 #board{width:100%;max-height:calc(100vh - 120px);display:block;margin:auto;touch-action:manipulation}
 .hint{margin:6px 0 0;text-align:center;color:var(--dim);font-size:12px}
@@ -55,6 +55,28 @@ h1{margin:0;font-size:24px;letter-spacing:.04em;text-transform:uppercase}
 .list li strong{font-variant-numeric:tabular-nums;white-space:nowrap}
 .list .empty{color:var(--dim)}
 
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.card-head h2{margin:0}
+.phases{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.phases .lbl{font-size:12px;color:var(--muted);margin-right:6px}
+.phases button{width:29px;height:29px;border-radius:8px;border:1px solid var(--line);background:var(--panel-hi);color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;
+  transition:background .2s,color .2s,border-color .2s}
+.phases button:hover{color:var(--fg);border-color:#5c513f}
+.phases button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+.need{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:5px}
+.need li{display:grid;grid-template-columns:minmax(0,1fr) auto 84px 52px;gap:8px;align-items:center;font-size:13px}
+.need li span{color:var(--muted)}
+.need li strong{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.need li.head span{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);text-align:right}
+.need input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:7px;color:var(--fg);padding:4px 6px;font:inherit;font-size:13px;text-align:right;
+  font-variant-numeric:tabular-nums;-moz-appearance:textfield}
+.need input::-webkit-outer-spin-button,.need input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.need input:focus{outline:none;border-color:var(--accent)}
+.need .miss{text-align:right;font-variant-numeric:tabular-nums;font-size:13px}
+.need .miss.bad{color:#e58a6b}.need .miss.ok{color:#86c98a}
+.verdict{margin:10px 0 0;font-size:13px;font-weight:600;color:var(--done)}
+.verdict:empty{display:none}
+.phase-card .actions{margin-top:10px}
 #nodeCard .kind{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
 #nodeCard h3{margin:2px 0 6px;font-size:18px}
 #nodeCard .desc{color:var(--muted);font-size:13px;margin:0 0 8px}
@@ -187,5 +209,6 @@ a.mark{display:block}
   .guns thead{display:none}
   h1{font-size:19px}
   .stats strong{font-size:17px}
+  .need li{grid-template-columns:minmax(0,1fr) auto 70px 44px;gap:6px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

@@ -32,6 +32,12 @@ Para regenerarla tras un parche:
   - Los nodos de atributo suben de nivel uno a uno: hasta 3 niveles en los anillos 1–7 y hasta 10 en el anillo 8. Cada mejora tiene su coste y su requisito de núcleo.
   - Al bajar el núcleo o quitar un nodo, se quita lo que deja de ser válido, incluida la rama que dependía de él.
 - **Totales:** atributos, Poder del personaje, nodos activos y al máximo, y coste total en Lumen y materiales, con los nombres oficiales en cada idioma.
+- **Objetivo por fase:**
+  - lo que falta para dejar al máximo una fase de la temporada (por defecto, la siguiente al núcleo del tablero), desde el tablero o desde la fase anterior al máximo;
+  - con la columna «Tengo» calcula lo que falta, y esas cantidades se guardan solo en el navegador (`localStorage`);
+  - Apollo Companion le pasa tus materiales con `&h=id.cantidad-…`, que no se vuelve a escribir en el enlace;
+  - lo pidieron jugadores en una encuesta: unos 40 de 70 querían saber «qué me falta para la próxima fase».
+- **Datos de una temporada:** `python tools/export_emanare_season.py 6` exporta la temporada a JSON y CSV (nodos, niveles, núcleo y coste de cada fase) en `../Emanare_S6_Export`.
 - **Compartir:** el estado se guarda en la URL (`#s=6&c=7&n=418.3-104.1…`), así que un enlace reproduce una build.
 - **Comprobación:** con el núcleo a nivel 10 y todo desbloqueado, los totales de la página coinciden exactamente con un cálculo independiente hecho sobre las tablas en bruto (117 nodos, 65.775 de poder, 26 materiales y 10 atributos).
 - **No incluye:** el aura de los nodos de personaje (depende del poder de tus personajes) ni los atributos aleatorios de las gemas. La página lo indica.
