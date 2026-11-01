@@ -77,8 +77,7 @@ button.primary:hover:not(:disabled),#nodeCard button.primary:hover:not(:disabled
 #nodeCard button:disabled{opacity:.35;cursor:default}
 
 /* Board */
-.ring{fill:none;stroke:#2a2318;stroke-width:1}
-.link{stroke:#3a3122;stroke-width:2;fill:none;transition:stroke .35s,stroke-width .35s}
+.link{stroke:#5c513f;stroke-width:2.5;stroke-linecap:round;fill:none;transition:stroke .35s,stroke-width .35s}
 .link.on{stroke:var(--accent);stroke-width:3;filter:drop-shadow(0 0 4px #d9a84e88)}
 .node{cursor:pointer;outline:none}
 .node .shape{fill:var(--panel);stroke:var(--line);stroke-width:2;transition:fill .3s,stroke .3s,opacity .3s}

@@ -146,8 +146,8 @@ function shape(n,g){
 }
 function drawBoard(){
   const svg=$('board');svg.textContent='';
-  const rings=el('g',{},svg),links=el('g',{},svg),dots=el('g',{},svg);
-  for(let r=1;r<=8;r++)el('circle',{class:'ring',r:radius(r)},rings);
+  // Like the in-game board: only the connections between nodes are drawn, no full ring guides.
+  const links=el('g',{},svg),dots=el('g',{},svg);
   const seen=new Set();
   for(const n of nodes)for(const m of new Set([...n.links,...n.prev])){
     const o=byId.get(m),key=[n.id,m].sort((a,b)=>a-b).join('-');
