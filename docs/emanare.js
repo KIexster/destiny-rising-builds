@@ -271,7 +271,7 @@ function translate(){
   document.documentElement.lang=S.lang;
   for(const e of document.querySelectorAll('[data-t]'))e.textContent=t(e.dataset.t);
   $('coreTitle').textContent=game('core');$('attrsTitle').textContent=game('attrs');$('powerLabel').textContent=game('power');
-  $('source').textContent=t('source',{s:S.data.source});document.title=`${t('pageTitle')} · Destiny Rising`;
+  $('source').textContent=t('source',{s:tr(S.data.source)});document.title=`${t('pageTitle')} · Destiny Rising`;
   segments();render();
 }
 function act(n,what){

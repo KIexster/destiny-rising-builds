@@ -14,7 +14,7 @@ ROOT=Path(__file__).resolve().parents[2];SITE=Path(__file__).resolve().parents[1
 TABLES=ROOT/'Emanare_Tablas_20261030/Tablas'
 LANGS={'en':ROOT/'Update_20261022/JSON/322be46287286a203429588cd16bda89.json','es':ROOT/'Update_20261022/JSON/47cac7e322a68fccf19184dfbd1b1172.json'}
 SKILLS=ROOT/'Update_20261022/Runtime/Data.SkillLite.SkillInfo.json'
-SOURCE='Global client, tables of 2026-10-29, texts of 2026-10-22'
+SOURCE={'en':'Global client, tables of 2026-10-29, texts of 2026-10-22','es':'cliente global, tablas del 29/10/2026, textos del 22/10/2026'}
 # Game strings reused by the page, so it speaks the game's own vocabulary in every language.
 GAME_TEXTS={'title':'TID_Season_PY_PeakBoard.py_1','core':'TID_Season_PY_PeakBoard.py_2','gem':'TID_Season_PY_PeakBoard.py_3',
  'role':'TID_Season_PY_PeakBoard.py_4','assist':'TID_Season_PY_PeakBoard.py_5','attr':'TID_Season_PY_PeakBoard.py_6','skill':'TID_Season_PY_PeakBoard.py_32',

@@ -8,6 +8,22 @@ Herramientas web de fans hechas con los datos del propio juego. Es un sitio est�
 - `docs/emanare.html`, `emanare.js` y `style.css`: **calculadora de Emanare**. Tablero de las temporadas 4, 5 y 6, en español e inglés.
 - `docs/data/emanare.json`: datos generados; no se editan a mano.
 - `tools/build_emanare.py`: genera ese JSON a partir de las tablas del cliente.
+- `docs/builds.html` y `builds.js`: **builds de personajes**. Usan `docs/data/builds.json` y las imágenes de `docs/img/`, que genera `tools/build_builds.py`.
+
+## Builds de personajes
+
+Es el equipamiento que recomienda el propio juego (`Builds_Recomendadas_20261101/LEEME.md`) para 22 personajes:
+- **Builds:** 3 por personaje, con nombre, descripción y valoración de Ataque, Supervivencia y Control (los nombres de la pantalla de conjuntos del juego).
+- **Piezas:** la de cada ranura, con su efecto. Los `{valores}` se rellenan con `SkillLiteParamData`, como rango PvE de base a máximo.
+- **Atributos:** los que conviene buscar.
+- **Armas:** por ranura y rareza.
+- **Compañeros:** los de afinidad 2–3. Cassian, Efrideet, Siorra y Tariq aún no tienen datos de afinidad en el juego.
+
+El enlace `builds.html#h109/2` abre directamente un personaje y su build. No incluye estadísticas de uso de los jugadores: el cliente no las tiene.
+
+Para regenerarla tras un parche:
+1. Extraer las tablas con `python Herramientas/inspect_tables.py Builds_Recomendadas_<fecha> Client/Data/ArtifactRecommendSuitLaunchData …`; la lista completa está en el LEEME de esa carpeta.
+2. Ejecutar `python tools/build_builds.py`, que avisa si falta algún nombre o imagen.
 
 ## Calculadora de Emanare
 

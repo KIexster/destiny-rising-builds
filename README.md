@@ -15,9 +15,18 @@ The rules are the game's:
 
 Character Node auras and gem rolls depend on each account and are not included.
 
+## Character Builds
+
+The loadouts the game itself recommends, for 22 characters:
+- 3 artifact builds each, with their Offense, Survival and Control ratings.
+- The piece for every slot, with its effect and values.
+- The attributes to look for.
+- Weapons per slot by rarity.
+- The teammates with the most affinity.
+
 ## How it works
 
-`docs/` is a static site, with no server or build step, published with GitHub Pages. `tools/build_emanare.py` generates `docs/data/emanare.json` from data tables extracted from the game client. See `LEEME.md` (Spanish) for how to regenerate it after a patch.
+`docs/` is a static site, with no server or build step, published with GitHub Pages. `tools/build_emanare.py` and `tools/build_builds.py` generate `docs/data/` and `docs/img/` from data tables and art extracted from the game client. See `LEEME.md` (Spanish) for how to regenerate it after a patch.
 
 ## Disclaimer
 
